@@ -1,0 +1,91 @@
+Entity:
+healthcare_pros( hid, designation, name, phone)
+citizen(cid,cname,email,age,phone,address)
+borough(bname,population)
+drug(dname,atc_code)
+patient(cid,status)
+cov19_test(cid,date,status)
+Relation:
+LivingArea(cid,bname)
+patientobservation(hid,cid,observdate,observehour,text)
+admin_drug(hid,cid,dname,dosage,admin_date,admin_hour)
+patient_Contact(cid,contcid)
+
+CREATE TABLE healthcare_pros(
+    hid INTEGER PRIMARY KEY NOT NULL,
+    disignation varchar(10) NOT NULL,
+    name varchar(20) NOT NULL,
+    phone int8 UNIQUE
+);
+CREATE TABLE citizen(
+    cid INTEGER PRIMARY KEY,
+    cname varchar(20) NOT NULL,
+    email  varchar(50) UNIQUE,
+    age int2,
+    phone int8 UNIQUE,
+    address varchar(100)
+);
+CREATE TABLE borough(
+    bname  varchar(50) PRIMARY KEY NOT NULL,
+    population INTEGER NOT NULL
+);
+CREATE TABLE drug(
+    dname varchar(20) PRIMARY KEY NOT NULL ,
+    atc_code varchar(7) NOT NULL UNIQUE
+);
+CREATE TABLE patient(
+
+    cid INTEGER PRIMARY KEY,
+    status varchar(20) NOT NULL DEFAULT 'infected',
+    foreign key (cid) references citizen(cid)
+);
+
+CREATE Table LivingArea(
+    cid INTEGER NOT NULL,
+    bname varchar(50) NOT NULL,
+    PRIMARY KEY(cid,bname),
+    foreign key (cid) references citizen(cid),
+    foreign key (bname) references borough(bname)
+);
+CREATE TABLE cov19_test(
+    cid INTEGER NOT NULL,
+    testdate DATE NOT NULL,
+    primary key(cid,testdate),
+    statues varchar(15) DEFAULT 'pending',
+    foreign key (cid) references citizen(cid)
+);
+CREATE TABLE patientobservation(
+    hid INTEGER NOT NULL,
+    cid INTEGER NOT NULL,
+    observdate DATE NOT NULL,
+    observehour TIME(0) NOT NULL,
+    text varchar(300) NOT NULL,
+    primary key (hid,cid,observdate,observehour),
+    foreign key(hid) references healthcare_pros(hid),
+    foreign key (cid) references patient(cid)
+);
+CREATE TABLE admin_drug(
+    hid INTEGER NOT NULL,
+    cid INTEGER NOT NULL,
+    dname varchar(20) NOT NULL,
+    dosage DECIMAL(6,2) NOT NULL,
+    admin_date DATE NOT NULL,
+    admin_hour TIME(0) NOT NULL,
+    foreign key (dname) references drug(dname),
+    foreign key (cid) references patient(cid)
+
+)
+\
+
+
+;
+CREATE TABLE patient_Contact
+(
+    cid INTEGER NOT NULL,
+    contcid INTEGER NOT NULL,
+    primary key (cid,contcid),
+    foreign key (cid) references patient(cid),
+    foreign key (contcid) references citizen(cid)
+);
+
+the patient_Contact relation can not restrict patient in contact with themselves.
