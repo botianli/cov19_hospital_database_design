@@ -74,11 +74,7 @@ CREATE TABLE admin_drug(
     foreign key (dname) references drug(dname),
     foreign key (cid) references patient(cid)
 
-)
-\
-
-
-;
+);
 CREATE TABLE patient_Contact
 (
     cid INTEGER NOT NULL,
